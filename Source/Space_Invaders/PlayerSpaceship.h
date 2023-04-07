@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "PlayerSpaceship.generated.h"
 
+class AProjectile;
 class UCameraComponent;
 class UInputMappingContext;
 struct FInputActionValue;
@@ -40,6 +41,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	UCameraComponent* CameraComponent;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AProjectile> ProjectileToSpawn;
 	
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* PlayerMappingContext;
@@ -47,9 +51,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* MoveAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* ShootAction;
+
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float MovementSpeed = 1.0f;
 
 	UFUNCTION()
 	void Move(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void Shoot();
 };

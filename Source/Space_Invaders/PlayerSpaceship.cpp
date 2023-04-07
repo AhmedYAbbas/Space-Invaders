@@ -5,6 +5,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Projectile.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -53,13 +54,21 @@ void APlayerSpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerSpaceship::Move);
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Completed, this, &APlayerSpaceship::Shoot);
 	}
-	
 }
 
 void APlayerSpaceship::Move(const FInputActionValue& Value)
 {
 	const float DirectionValue = Value.Get<float>();
 	AddMovementInput(GetActorRightVector(), DirectionValue);
+}
+
+void APlayerSpaceship::Shoot()
+{
+	FActorSpawnParameters SpawnParameters;
+	const FVector Location = ProjectSpawner->GetComponentLocation();
+	const FRotator Rotation = ProjectSpawner->GetComponentRotation();
+	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileToSpawn, Location, Rotation, SpawnParameters);
 }
 
