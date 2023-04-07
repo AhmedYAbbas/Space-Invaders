@@ -5,6 +5,8 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 APlayerSpaceship::APlayerSpaceship()
@@ -12,6 +14,14 @@ APlayerSpaceship::APlayerSpaceship()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
+	ProjectSpawner = CreateDefaultSubobject<USceneComponent>(TEXT("Project Spawner"));
+
+	RootComponent = CameraComponent;
+	GetCapsuleComponent()->SetupAttachment(RootComponent);
+	StaticMeshComponent->SetupAttachment(GetCapsuleComponent());
+	ProjectSpawner->SetupAttachment(StaticMeshComponent);
 }
 
 // Called when the game starts or when spawned
@@ -19,7 +29,7 @@ void APlayerSpaceship::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	if (const APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{

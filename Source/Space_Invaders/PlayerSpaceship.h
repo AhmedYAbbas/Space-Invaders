@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "PlayerSpaceship.generated.h"
 
+class UCameraComponent;
 class UInputMappingContext;
 struct FInputActionValue;
 class UInputAction;
@@ -29,8 +30,17 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
 private:
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* StaticMeshComponent;
+	
+	UPROPERTY(EditDefaultsOnly)
+	USceneComponent* ProjectSpawner;
+
+	UPROPERTY(EditDefaultsOnly)
+	UCameraComponent* CameraComponent;
+	
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* PlayerMappingContext;
 
@@ -38,7 +48,8 @@ private:
 	UInputAction* MoveAction;
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
-	float MovementSpeed = 0.0f;
+	float MovementSpeed = 1.0f;
 
+	UFUNCTION()
 	void Move(const FInputActionValue& Value);
 };
