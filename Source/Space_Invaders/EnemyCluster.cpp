@@ -4,7 +4,6 @@
 #include "EnemyCluster.h"
 
 #include "Components/CapsuleComponent.h"
-#include "Engine/BlockingVolume.h"
 
 // Sets default values for this component's properties
 AEnemyCluster::AEnemyCluster()
@@ -22,7 +21,7 @@ AEnemyCluster::AEnemyCluster()
 void AEnemyCluster::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	CapsuleComponent->SetGenerateOverlapEvents(true);
 	CapsuleComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCluster::ChangeMovementDirection);
@@ -44,6 +43,6 @@ void AEnemyCluster::ChangeMovementDirection(UPrimitiveComponent* OverlappedComp,
 {
 	MovingDirection *= -1;
 	
-	const FVector CurrentLocation = GetActorLocation();
-	SetActorLocation(CurrentLocation + FVector(0, 0, DeltaZ));
+	// const FVector CurrentLocation = GetActorLocation();
+	// SetActorLocation(CurrentLocation + FVector(0, 0, DeltaZ));
 }

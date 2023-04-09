@@ -6,6 +6,7 @@
 #include "EnemySpaceship.generated.h"
 
 class UCapsuleComponent;
+class AProjectile;
 
 UCLASS()
 class SPACE_INVADERS_API AEnemySpaceship : public AActor
@@ -24,26 +25,35 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	bool CanShoot() const;
+
+	UFUNCTION()
+	void Shoot();
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* StaticMeshComponent;
 
 	UPROPERTY(EditDefaultsOnly)
 	UCapsuleComponent* CapsuleComponent;
-	
 
-	UPROPERTY(EditAnywhere, Category = "Movement")
-	FVector DeltaZLocation = FVector(0, 0, -100.0f);
+	UPROPERTY(EditDefaultsOnly)
+	USceneComponent* ProjectileSpawner;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AProjectile> ProjectileToSpawn;
 
 	UPROPERTY(EditAnywhere)
 	FVector LineTraceDistance = FVector(0, 0, -250.0f);
-	
-	inline int32 static MovingDirection = 1;
-	inline float static DeltaY = 250.0f;
-	
-	UFUNCTION()
-	void ChangeMovementDirection(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	inline TArray<AEnemySpaceship*> static ReadyEnemySpaceships;
+	inline int32 static Index = 0;
+
+	FTimerHandle ShootTimeHandle;
+
+	UPROPERTY()
+	bool bShoot = false;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

@@ -37,7 +37,7 @@ private:
 	UStaticMeshComponent* StaticMeshComponent;
 	
 	UPROPERTY(EditDefaultsOnly)
-	USceneComponent* ProjectSpawner;
+	USceneComponent* ProjectileSpawner;
 
 	UPROPERTY(EditDefaultsOnly)
 	UCameraComponent* CameraComponent;

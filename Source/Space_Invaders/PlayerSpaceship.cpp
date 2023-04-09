@@ -17,12 +17,12 @@ APlayerSpaceship::APlayerSpaceship()
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
-	ProjectSpawner = CreateDefaultSubobject<USceneComponent>(TEXT("Project Spawner"));
+	ProjectileSpawner = CreateDefaultSubobject<USceneComponent>(TEXT("Project Spawner"));
 
 	RootComponent = CameraComponent;
 	GetCapsuleComponent()->SetupAttachment(RootComponent);
 	StaticMeshComponent->SetupAttachment(GetCapsuleComponent());
-	ProjectSpawner->SetupAttachment(StaticMeshComponent);
+	ProjectileSpawner->SetupAttachment(StaticMeshComponent);
 }
 
 // Called when the game starts or when spawned
@@ -69,8 +69,8 @@ void APlayerSpaceship::Move(const FInputActionValue& Value)
 void APlayerSpaceship::Shoot()
 {
 	const FActorSpawnParameters SpawnParameters;
-	const FVector Location = ProjectSpawner->GetComponentLocation();
-	const FRotator Rotation = ProjectSpawner->GetComponentRotation();
+	const FVector Location = ProjectileSpawner->GetComponentLocation();
+	const FRotator Rotation = ProjectileSpawner->GetComponentRotation();
 	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileToSpawn, Location, Rotation, SpawnParameters);
 }
 
