@@ -25,6 +25,8 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	StaticMeshComponent->SetGenerateOverlapEvents(true);
 	
 }
 

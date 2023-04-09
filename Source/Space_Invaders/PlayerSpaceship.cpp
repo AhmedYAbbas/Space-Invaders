@@ -66,7 +66,7 @@ void APlayerSpaceship::Move(const FInputActionValue& Value)
 
 void APlayerSpaceship::Shoot()
 {
-	FActorSpawnParameters SpawnParameters;
+	const FActorSpawnParameters SpawnParameters;
 	const FVector Location = ProjectSpawner->GetComponentLocation();
 	const FRotator Rotation = ProjectSpawner->GetComponentRotation();
 	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileToSpawn, Location, Rotation, SpawnParameters);
