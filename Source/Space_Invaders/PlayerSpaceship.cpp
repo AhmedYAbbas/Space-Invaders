@@ -30,6 +30,8 @@ void APlayerSpaceship::BeginPlay()
 {
 	Super::BeginPlay();
 
+	StaticMeshComponent->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Ignore);
+
 	if (const APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))

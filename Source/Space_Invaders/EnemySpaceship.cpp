@@ -7,6 +7,7 @@
 #include "Projectile.h"
 #include "Components/CapsuleComponent.h"
 #include "Engine/BlockingVolume.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
@@ -20,7 +21,6 @@ AEnemySpaceship::AEnemySpaceship()
 	
 	RootComponent = CapsuleComponent;
 	StaticMeshComponent->SetupAttachment(RootComponent);
-
 }
 
 // Called when the game starts or when spawned
@@ -31,10 +31,8 @@ void AEnemySpaceship::BeginPlay()
 	StaticMeshComponent->SetGenerateOverlapEvents(true);
 
 	StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
-	// StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
 
-	// StaticMeshComponent->OnComponentHit.AddDynamic(this, &AEnemySpaceship::ChangeMovementDirection);
-	StaticMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AEnemySpaceship::ChangeMovementDirection);
+	// StaticMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AEnemySpaceship::ChangeMovementDirection);
 	StaticMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AEnemySpaceship::OnHit);
 }
 
@@ -43,7 +41,11 @@ void AEnemySpaceship::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	StaticMeshComponent->AddRelativeLocation(DeltaYLocation * AEnemySpaceship::MovingDirection * DeltaTime, false);
+	// const float MovementOffset = DeltaY * MovingDirection * DeltaTime;
+	// const FVector CurrentLocation = GetActorLocation();
+	// SetActorLocation(CurrentLocation + FVector(0, MovementOffset, 0));
+
+	// RootComponent->MoveComponent(FVector(0, MovementOffset, 0), FQuat::Identity, false);
 	
 	// FVector StartLocation = GetActorLocation();
 	// FVector EndLocation = GetActorLocation() + LineTraceDistance;
@@ -53,26 +55,14 @@ void AEnemySpaceship::Tick(float DeltaTime)
 	//
 	// UKismetSystemLibrary::LineTraceSingle(this, StartLocation, EndLocation, UEngineTypes::ConvertToTraceType(ECC_Camera), false,
 	// 	ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true, FLinearColor::Red, FLinearColor::Green, 0.5f);
-
 }
-
-// void AEnemySpaceship::ChangeMovementDirection(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-// {
-// 	AEnemySpaceship::MovingDirection *= -1;
-// 	//
-// 	// for (const AEnemySpaceship* EnemySpaceship : TActorRange<AEnemySpaceship>(GetWorld()))
-// 	// {
-// 	// 	EnemySpaceship->StaticMeshComponent->AddRelativeLocation(DeltaZLocation, true);
-// 	// }
-// }
 
 void AEnemySpaceship::ChangeMovementDirection(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (Cast<ABlockingVolume>(Other))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Overlapped with invisible wall!"));
-		AEnemySpaceship::MovingDirection *= -1;
+		MovingDirection *= -1;
 	}
 
 	// for (const AEnemySpaceship* EnemySpaceship : TActorRange<AEnemySpaceship>(GetWorld()))
@@ -82,7 +72,7 @@ void AEnemySpaceship::ChangeMovementDirection(UPrimitiveComponent* OverlappedCom
 }
 
 void AEnemySpaceship::OnHit(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                            int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (Cast<AProjectile>(Other))
 	{
@@ -90,5 +80,3 @@ void AEnemySpaceship::OnHit(UPrimitiveComponent* OverlappedComp, AActor* Other, 
 		GetWorld()->DestroyActor(this);
 	}
 }
-
-
